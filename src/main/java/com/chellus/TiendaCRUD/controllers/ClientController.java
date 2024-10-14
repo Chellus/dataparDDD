@@ -48,7 +48,6 @@ public class ClientController {
             updatedClient.setName(client.getName());
             updatedClient.setAddress(client.getAddress());
             updatedClient.setPhone(client.getPhone());
-            updatedClient.setOrders(client.getOrders());
             clientRepository.save(updatedClient);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         }
