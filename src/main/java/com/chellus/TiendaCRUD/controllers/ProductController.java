@@ -54,12 +54,14 @@ public class ProductController {
     }
 
     // Delete product by id
-    // TODO: Fix this, response is status 500
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
+            Product deletedProduct = product.get();
+            // force initialization of lazy-loaded collection
+            deletedProduct.getOrders().size();
             productRepository.delete(product.get());
             return new ResponseEntity<>(product.get(), HttpStatus.OK);
         }
