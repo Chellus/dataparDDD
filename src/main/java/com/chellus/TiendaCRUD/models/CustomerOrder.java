@@ -14,13 +14,8 @@ public class CustomerOrder {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_product",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> products;
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderProduct> orderItems;
 
     private double totalPrice;
     private int quantity;
@@ -41,12 +36,12 @@ public class CustomerOrder {
         this.client = client;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<OrderProduct> getOrderItems() {
+        return orderItems;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setOrderItems(Set<OrderProduct> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public double getTotalPrice() {

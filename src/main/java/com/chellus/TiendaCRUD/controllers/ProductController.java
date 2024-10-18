@@ -61,7 +61,7 @@ public class ProductController {
         if (product.isPresent()) {
             Product deletedProduct = product.get();
             // force initialization of lazy-loaded collection
-            deletedProduct.getOrders().size();
+            deletedProduct.getOrderItems().size();
             productRepository.delete(product.get());
             return new ResponseEntity<>(product.get(), HttpStatus.OK);
         }

@@ -15,8 +15,8 @@ public class Product {
     private double productPrice;
     private int productStock;
 
-    @ManyToMany(mappedBy = "products")
-    private Set<CustomerOrder> customerOrders;
+    @OneToMany(mappedBy = "product")
+    private Set<OrderProduct> orderItems;
 
     public Long getId() {
         return id;
@@ -58,11 +58,11 @@ public class Product {
         this.productStock = productStock;
     }
 
-    public Set<CustomerOrder> getOrders() {
-        return customerOrders;
+    public Set<OrderProduct> getOrderItems() {
+        return orderItems;
     }
 
-    public void setOrders(Set<CustomerOrder> customerOrders) {
-        this.customerOrders = customerOrders;
+    public void setOrderItems(Set<OrderProduct> orderItems) {
+        this.orderItems = orderItems;
     }
 }
