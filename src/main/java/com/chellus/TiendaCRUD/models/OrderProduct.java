@@ -1,5 +1,6 @@
 package com.chellus.TiendaCRUD.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,13 +11,25 @@ public class OrderProduct {
 
     @ManyToOne
     @JoinColumn(name="order_id")
+    @JsonBackReference
     private CustomerOrder order;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
     private int quantity;
+
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", order=" + order +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
+    }
 
     public Long getId() {
         return id;

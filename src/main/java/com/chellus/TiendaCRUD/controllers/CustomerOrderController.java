@@ -39,7 +39,13 @@ public class CustomerOrderController {
     // create new order, we need to update every product
     @PostMapping
     public ResponseEntity<CustomerOrder> create(@RequestBody CustomerOrder customerOrder) {
+        System.out.println(customerOrder);
+
+        for (OrderProduct orderProduct : customerOrder.getOrderItems()) {
+            orderProduct.setOrder(customerOrder);
+        }
         customerOrder.setTotalPrice(this.calculateTotalPrice(customerOrder));
+
         this.updateProductsStock(customerOrder);
         customerOrderRepository.save(customerOrder);
         return new ResponseEntity<>(customerOrder, HttpStatus.CREATED);
@@ -75,11 +81,13 @@ public class CustomerOrderController {
     }
 
     // TODO: check if this is actually necessary, I'm inclining towards no.
+    // this isn't actually necessary because we're expecting the front-end to calculate the price and send it
+    // in the body of the request
     private double calculateTotalPrice(CustomerOrder customerOrder) {
         double totalPrice = 0;
 
         for (OrderProduct orderProduct : customerOrder.getOrderItems()) {
-            Optional<Product> optionalProduct = productRepository.findById(orderProduct.getId());
+            Optional<Product> optionalProduct = productRepository.findById(orderProduct.getProduct().getId());
 
             if (optionalProduct.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
@@ -94,7 +102,8 @@ public class CustomerOrderController {
 
     private void updateProductsStock(CustomerOrder customerOrder) {
         for (OrderProduct orderProduct : customerOrder.getOrderItems()) {
-            Optional<Product> optionalProduct = productRepository.findById(orderProduct.getId());
+
+            Optional<Product> optionalProduct = productRepository.findById(orderProduct.getProduct().getId());
 
             if (optionalProduct.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");

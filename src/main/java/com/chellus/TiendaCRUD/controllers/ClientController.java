@@ -1,12 +1,15 @@
 package com.chellus.TiendaCRUD.controllers;
 
 import com.chellus.TiendaCRUD.models.Client;
+import com.chellus.TiendaCRUD.models.ClientDTO;
+import com.chellus.TiendaCRUD.models.CustomerOrder;
 import com.chellus.TiendaCRUD.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,25 +21,66 @@ public class ClientController {
 
     // List all clients
     @GetMapping
-    public ResponseEntity<List<Client>> listClients() {
+    public ResponseEntity<List<ClientDTO>> listClients() {
         List<Client> clients = clientRepository.findAll();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+        List<ClientDTO> clientDTOs = new ArrayList<>();
+
+
+        for (Client client : clients) {
+            ClientDTO clientDTO = new ClientDTO();
+            List<Long> ids = new ArrayList<>();
+            clientDTO.setId(client.getId());
+            clientDTO.setName(client.getName());
+            clientDTO.setAddress(client.getAddress());
+            clientDTO.setPhone(client.getPhone());
+
+            for (CustomerOrder order : client.getOrders()) {
+                ids.add(order.getId());
+            }
+            clientDTO.setCustomerOrdersId(ids);
+            clientDTOs.add(clientDTO);
+        }
+
+        return new ResponseEntity<>(clientDTOs, HttpStatus.OK);
     }
 
     // Get client by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Long id) {
-        Optional<Client> client = clientRepository.findById(id);
+    public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
+        Optional<Client> optionalClient = clientRepository.findById(id);
 
-        return client.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            ClientDTO clientDTO = new ClientDTO();
+            List<Long> ids = new ArrayList<>();
+            clientDTO.setId(client.getId());
+            clientDTO.setName(client.getName());
+            clientDTO.setAddress(client.getAddress());
+            clientDTO.setPhone(client.getPhone());
+
+            for (CustomerOrder order : client.getOrders()) {
+                ids.add(order.getId());
+            }
+            clientDTO.setCustomerOrdersId(ids);
+            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
     }
 
     // Create a new client
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-        Client newClient = clientRepository.save(client);
-        return new ResponseEntity<>(newClient, HttpStatus.CREATED);
+    public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO client) {
+        Client newClient = new Client();
+
+        newClient.setName(client.getName());
+        newClient.setAddress(client.getAddress());
+        newClient.setPhone(client.getPhone());
+        Client savedClient = clientRepository.save(newClient);
+        client.setId(savedClient.getId());
+
+        return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
 
     // Update an existing client by ID
