@@ -1,5 +1,6 @@
 package com.chellus.TiendaCRUD.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDTO {
@@ -9,6 +10,8 @@ public class ClientDTO {
     private String phone;
     private List<Long> customerOrdersId;
 
+    public ClientDTO() {}
+
     public ClientDTO(Long id, String name, String address, List<Long> customerOrdersId, String phone) {
         this.id = id;
         this.name = name;
@@ -17,8 +20,18 @@ public class ClientDTO {
         this.phone = phone;
     }
 
-    public ClientDTO() {
+    public ClientDTO(Client client) {
+        this.id = client.getId();
+        this.name = client.getName();
+        this.address = client.getAddress();
+        this.phone = client.getPhone();
+        List<Long> customerOrdersId = new ArrayList<>();
 
+        for (CustomerOrder order : client.getOrders()) {
+            customerOrdersId.add(order.getId());
+        }
+
+        this.customerOrdersId = customerOrdersId;
     }
 
     public Long getId() {

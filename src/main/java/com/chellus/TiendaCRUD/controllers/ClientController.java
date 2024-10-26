@@ -4,6 +4,7 @@ import com.chellus.TiendaCRUD.models.Client;
 import com.chellus.TiendaCRUD.models.ClientDTO;
 import com.chellus.TiendaCRUD.models.CustomerOrder;
 import com.chellus.TiendaCRUD.repositories.ClientRepository;
+import com.chellus.TiendaCRUD.repositories.CustomerOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +13,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private CustomerOrderRepository orderRepository;
 
     // List all clients
     @GetMapping
@@ -27,17 +32,7 @@ public class ClientController {
 
 
         for (Client client : clients) {
-            ClientDTO clientDTO = new ClientDTO();
-            List<Long> ids = new ArrayList<>();
-            clientDTO.setId(client.getId());
-            clientDTO.setName(client.getName());
-            clientDTO.setAddress(client.getAddress());
-            clientDTO.setPhone(client.getPhone());
-
-            for (CustomerOrder order : client.getOrders()) {
-                ids.add(order.getId());
-            }
-            clientDTO.setCustomerOrdersId(ids);
+            ClientDTO clientDTO = new ClientDTO(client);
             clientDTOs.add(clientDTO);
         }
 
@@ -51,17 +46,7 @@ public class ClientController {
 
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
-            ClientDTO clientDTO = new ClientDTO();
-            List<Long> ids = new ArrayList<>();
-            clientDTO.setId(client.getId());
-            clientDTO.setName(client.getName());
-            clientDTO.setAddress(client.getAddress());
-            clientDTO.setPhone(client.getPhone());
-
-            for (CustomerOrder order : client.getOrders()) {
-                ids.add(order.getId());
-            }
-            clientDTO.setCustomerOrdersId(ids);
+            ClientDTO clientDTO = new ClientDTO(client);
             return new ResponseEntity<>(clientDTO, HttpStatus.OK);
         }
 
@@ -85,26 +70,34 @@ public class ClientController {
 
     // Update an existing client by ID
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO client) {
         Optional<Client> existingClient = clientRepository.findById(id);
         if (existingClient.isPresent()) {
             Client updatedClient = existingClient.get();
+            List<CustomerOrder> orders = new ArrayList<>();
+
+            client.setId(id);
+
             updatedClient.setName(client.getName());
             updatedClient.setAddress(client.getAddress());
             updatedClient.setPhone(client.getPhone());
+
             clientRepository.save(updatedClient);
-            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+            return new ResponseEntity<>(client, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Client> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<ClientDTO> deleteClient(@PathVariable Long id) {
         Optional<Client> client = clientRepository.findById(id);
+
         if (client.isPresent()) {
+            ClientDTO clientDTO = new ClientDTO(client.get());
             clientRepository.delete(client.get());
-            return new ResponseEntity<>(client.get(), HttpStatus.OK);
+            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
         }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
