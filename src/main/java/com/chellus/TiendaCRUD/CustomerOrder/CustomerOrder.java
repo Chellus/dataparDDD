@@ -1,5 +1,7 @@
-package com.chellus.TiendaCRUD.models;
+package com.chellus.TiendaCRUD.CustomerOrder;
 
+import com.chellus.TiendaCRUD.Client.Client;
+import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -14,11 +16,9 @@ public class CustomerOrder {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    @JsonBackReference
     private Client client;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Set<OrderProduct> orderItems;
 
     private double totalPrice;
