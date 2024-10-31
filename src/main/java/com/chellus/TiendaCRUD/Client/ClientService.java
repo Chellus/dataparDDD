@@ -1,6 +1,7 @@
 package com.chellus.TiendaCRUD.Client;
 
 import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
+import com.chellus.TiendaCRUD.Exceptions.ClientNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,8 +71,10 @@ public class ClientService {
         // populate customerOrderIds
         List<Long> customerOrdersId = new ArrayList<>();
 
-        for (CustomerOrder order : client.getOrders()) {
-            customerOrdersId.add(order.getId());
+        if (client.getOrders() != null) {
+            for (CustomerOrder order : client.getOrders()) {
+                customerOrdersId.add(order.getId());
+            }
         }
 
         clientDTO.setCustomerOrdersId(customerOrdersId);
