@@ -1,5 +1,6 @@
-package com.chellus.TiendaCRUD.models;
+package com.chellus.TiendaCRUD.Client;
 
+import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 

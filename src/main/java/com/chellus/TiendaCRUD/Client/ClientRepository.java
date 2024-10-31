@@ -1,6 +1,5 @@
-package com.chellus.TiendaCRUD.repositories;
+package com.chellus.TiendaCRUD.Client;
 
-import com.chellus.TiendaCRUD.models.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {

@@ -1,4 +1,6 @@
-package com.chellus.TiendaCRUD.models;
+package com.chellus.TiendaCRUD.Client;
+
+import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
 
 import java.util.ArrayList;
 import java.util.List;
