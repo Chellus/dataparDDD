@@ -1,6 +1,5 @@
-package com.chellus.TiendaCRUD.repositories;
+package com.chellus.TiendaCRUD.Product;
 
-import com.chellus.TiendaCRUD.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {

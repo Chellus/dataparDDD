@@ -1,36 +1,17 @@
-package com.chellus.TiendaCRUD.models;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+package com.chellus.TiendaCRUD.Product;
 
 import java.util.Set;
 
-@Entity
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductDTO {
     private Long id;
-
     private String productName;
     private String productDescription;
     private double productPrice;
     private int productStock;
+    private Set<Long> orderIds;
 
-    @OneToMany(mappedBy = "product")
-    @JsonManagedReference
-    private Set<OrderProduct> orderItems;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", productName='" + productName + '\'' +
-                ", productDescription='" + productDescription + '\'' +
-                ", productPrice=" + productPrice +
-                ", productStock=" + productStock +
-                ", orderItems=" + orderItems +
-                '}';
-    }
+    public ProductDTO() { }
 
     public Long getId() {
         return id;
@@ -72,11 +53,11 @@ public class Product {
         this.productStock = productStock;
     }
 
-    public Set<OrderProduct> getOrderItems() {
-        return orderItems;
+    public Set<Long> getOrderIds() {
+        return orderIds;
     }
 
-    public void setOrderItems(Set<OrderProduct> orderItems) {
-        this.orderItems = orderItems;
+    public void setOrderIds(Set<Long> orderIds) {
+        this.orderIds = orderIds;
     }
 }
