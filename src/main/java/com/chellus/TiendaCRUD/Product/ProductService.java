@@ -1,12 +1,12 @@
 package com.chellus.TiendaCRUD.Product;
 
+import com.chellus.TiendaCRUD.Exceptions.ProductNotFoundException;
 import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -68,6 +68,15 @@ public class ProductService {
         return deletedProduct;
     }
 
+    private OrderSummaryDTO toOrderSummaryDTO(OrderProduct orderProduct) {
+        OrderSummaryDTO orderSummaryDTO = new OrderSummaryDTO();
+
+        orderSummaryDTO.setOrderId(orderProduct.getOrder().getId());
+        orderSummaryDTO.setQuantity(orderProduct.getQuantity());
+
+        return orderSummaryDTO;
+    }
+
     private ProductDTO toProductDTO(Product product) {
         ProductDTO productDTO = new ProductDTO();
 
@@ -77,13 +86,15 @@ public class ProductService {
         productDTO.setProductPrice(product.getProductPrice());
         productDTO.setProductStock(product.getProductStock());
 
-        Set<Long> ids = new HashSet<>();
+        Set<OrderSummaryDTO> orderSummaryDTOs = new HashSet<>();
 
-        for (OrderProduct orderProduct : product.getOrderItems()) {
-            ids.add(orderProduct.getId());
+        if (product.getOrderItems() != null) {
+            for (OrderProduct orderProduct : product.getOrderItems()) {
+                orderSummaryDTOs.add(toOrderSummaryDTO(orderProduct));
+            }
         }
 
-        productDTO.setOrderIds(ids);
+        productDTO.setOrders(orderSummaryDTOs);
 
         return productDTO;
     }

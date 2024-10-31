@@ -1,4 +1,4 @@
-package com.chellus.TiendaCRUD.Product;
+package com.chellus.TiendaCRUD.Exceptions;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(Long id) {

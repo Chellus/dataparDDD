@@ -1,5 +1,6 @@
 package com.chellus.TiendaCRUD.Product;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ProductDTO {
@@ -8,7 +9,7 @@ public class ProductDTO {
     private String productDescription;
     private double productPrice;
     private int productStock;
-    private Set<Long> orderIds;
+    private Set<OrderSummaryDTO> orders = new HashSet<>();
 
 
     public ProductDTO() { }
@@ -53,11 +54,11 @@ public class ProductDTO {
         this.productStock = productStock;
     }
 
-    public Set<Long> getOrderIds() {
-        return orderIds;
+    public Set<OrderSummaryDTO> getOrders() {
+        return orders;
     }
 
-    public void setOrderIds(Set<Long> orderIds) {
-        this.orderIds = orderIds;
+    public void setOrders(Set<OrderSummaryDTO> orderIds) {
+        this.orders = orderIds;
     }
 }

@@ -18,7 +18,6 @@ public class Product {
     private int productStock;
 
     @OneToMany(mappedBy = "product")
-    @JsonManagedReference
     private Set<OrderProduct> orderItems;
 
     @Override
