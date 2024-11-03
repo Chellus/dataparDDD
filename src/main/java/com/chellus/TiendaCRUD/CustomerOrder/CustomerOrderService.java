@@ -46,6 +46,7 @@ public class CustomerOrderService {
         return toCustomerOrderDTO(customerOrder);
     }
 
+    @Transactional
     public CustomerOrderDTO createCustomerOrder(CustomerOrderDTO customerOrderDTO) {
         CustomerOrder customerOrder = new CustomerOrder();
         // find the client if it exits
@@ -157,6 +158,7 @@ public class CustomerOrderService {
         return toCustomerOrderDTO(updatedOrder);
     }
 
+    @Transactional
     public CustomerOrderDTO deleteCustomerOrder(Long id) {
         CustomerOrder order = customerOrderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));

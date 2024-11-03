@@ -1,7 +1,6 @@
 package com.chellus.TiendaCRUD.Client;
 
 import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class Client {
     private String phone;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<CustomerOrder> customerOrders;
 
     @Override

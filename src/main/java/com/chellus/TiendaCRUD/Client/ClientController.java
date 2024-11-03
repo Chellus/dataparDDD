@@ -1,7 +1,7 @@
 package com.chellus.TiendaCRUD.Client;
 
 import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrderRepository;
-import com.chellus.TiendaCRUD.Exceptions.ClientNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,44 +29,28 @@ public class ClientController {
     // Get client by ID
     @GetMapping("/{id}")
     public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
-        try {
-            ClientDTO clientDTO = clientService.getClientById(id);
-
-            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
-        }
-        catch (ClientNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ClientDTO clientDTO = clientService.getClientById(id);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 
     // Create a new client
     @PostMapping
-    public ResponseEntity<ClientDTO> createClient(@RequestBody ClientDTO client) {
+    public ResponseEntity<ClientDTO> createClient(@RequestBody @Valid ClientDTO client) {
         ClientDTO clientDTO = clientService.createClient(client);
         return new ResponseEntity<>(clientDTO, HttpStatus.CREATED);
     }
 
     // Update an existing client by ID
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody ClientDTO client) {
-        try {
-            ClientDTO clientDTO = clientService.updateClient(id, client);
-            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
-        }
-        catch (ClientNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @RequestBody @Valid ClientDTO client) {
+        ClientDTO clientDTO = clientService.updateClient(id, client);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 
     // Delete a client by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ClientDTO> deleteClient(@PathVariable Long id) {
-        try {
-            ClientDTO clientDTO = clientService.deleteClient(id);
-            return new ResponseEntity<>(clientDTO, HttpStatus.OK);
-        }
-        catch (ClientNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ClientDTO clientDTO = clientService.deleteClient(id);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 }

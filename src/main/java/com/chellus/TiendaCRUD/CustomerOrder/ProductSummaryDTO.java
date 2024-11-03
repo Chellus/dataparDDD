@@ -1,7 +1,12 @@
 package com.chellus.TiendaCRUD.CustomerOrder;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 public class ProductSummaryDTO {
+    @NotNull
     Long productId;
+    @Min(1)
     int quantity;
 
     public ProductSummaryDTO() {}

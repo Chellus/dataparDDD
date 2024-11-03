@@ -1,7 +1,6 @@
 package com.chellus.TiendaCRUD.Product;
 
 import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;

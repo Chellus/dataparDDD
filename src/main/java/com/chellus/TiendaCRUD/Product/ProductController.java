@@ -1,7 +1,7 @@
 package com.chellus.TiendaCRUD.Product;
 
-import com.chellus.TiendaCRUD.Exceptions.ProductNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,42 +26,30 @@ public class ProductController {
     // Get product by ID
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        try {
-            ProductDTO product = productService.getProductById(id);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (ProductNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ProductDTO product = productService.getProductById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     // Create a new product
     @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @Valid ProductDTO product) {
         ProductDTO productCreated = productService.createProduct(product);
         return new ResponseEntity<>(productCreated, HttpStatus.CREATED);
     }
 
     // Update existing product
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,@RequestBody ProductDTO product) {
-        try {
-            ProductDTO productUpdated = productService.updateProduct(id, product);
-            return new ResponseEntity<>(productUpdated, HttpStatus.OK);
-        } catch (ProductNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,@RequestBody @Valid ProductDTO product) {
+        ProductDTO productUpdated = productService.updateProduct(id, product);
+        return new ResponseEntity<>(productUpdated, HttpStatus.OK);
     }
 
     // Delete product by id
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long id) {
-        try {
-            ProductDTO deletedProduct = productService.deleteProduct(id);
-            return new ResponseEntity<>(deletedProduct, HttpStatus.OK);
-        } catch (ProductNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ProductDTO deletedProduct = productService.deleteProduct(id);
+        return new ResponseEntity<>(deletedProduct, HttpStatus.OK);
     }
 
 }

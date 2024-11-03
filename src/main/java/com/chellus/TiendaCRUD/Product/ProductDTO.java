@@ -1,13 +1,20 @@
 package com.chellus.TiendaCRUD.Product;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class ProductDTO {
     private Long id;
+    @NotBlank(message = "Name can't be blank")
     private String productName;
+    @NotBlank(message = "Description can't be blank")
     private String productDescription;
+    @Min(value = 0, message = "Price can't negative")
     private double productPrice;
+    @Min(value = 0, message = "Stock can't be negative")
     private int productStock;
     private Set<OrderSummaryDTO> orders = new HashSet<>();
 

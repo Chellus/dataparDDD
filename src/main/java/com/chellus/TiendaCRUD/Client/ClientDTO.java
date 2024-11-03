@@ -1,14 +1,16 @@
 package com.chellus.TiendaCRUD.Client;
 
-import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDTO {
     private Long id;
+    @NotBlank(message = "Name can not be blank")
     private String name;
+    @NotBlank(message = "Address can not be blank")
     private String address;
+    @NotBlank(message = "Phone can not be blank")
     private String phone;
     private List<Long> customerOrdersId;
 
