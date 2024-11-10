@@ -50,7 +50,7 @@ public class ClientController {
     // Delete a client by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<ClientDTO> deleteClient(@PathVariable Long id) {
-        ClientDTO clientDTO = clientService.deleteClient(id);
+        ClientDTO clientDTO = clientService.softDeleteClient(id);
         return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 }

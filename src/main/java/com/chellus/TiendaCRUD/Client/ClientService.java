@@ -5,6 +5,7 @@ import com.chellus.TiendaCRUD.Exceptions.ClientNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,21 +27,21 @@ public class ClientService {
     }
 
     public List<ClientDTO> getAllClients() {
-        List<Client> clients = clientRepository.findAll();
+        List<Client> clients = clientRepository.findAllActive();
         return clients.stream()
                 .map(this::toClientDTO)
                 .collect(Collectors.toList());
     }
 
     public ClientDTO getClientById(Long id) {
-        Client client = clientRepository.findById(id)
+        Client client = clientRepository.findByIdActive(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
         return toClientDTO(client);
     }
 
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
-        Client existingClient = clientRepository.findById(id)
+        Client existingClient = clientRepository.findByIdActive(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
         existingClient.setName(clientDTO.getName());
@@ -51,12 +52,13 @@ public class ClientService {
         return toClientDTO(updatedClient);
     }
 
-    public ClientDTO deleteClient(Long id) {
-        Client client = clientRepository.findById(id)
+    public ClientDTO softDeleteClient(Long id) {
+        Client client = clientRepository.findByIdActive(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
         ClientDTO clientDTO = toClientDTO(client);
-        clientRepository.delete(client);
+        client.setDeletedAt(LocalDateTime.now());
+        clientRepository.save(client);
 
         return clientDTO;
     }

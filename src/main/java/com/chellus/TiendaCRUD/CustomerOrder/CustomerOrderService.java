@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,13 +35,13 @@ public class CustomerOrderService {
     private ProductRepository productRepository;
 
     public List<CustomerOrderDTO> getAllCustomerOrders() {
-        List<CustomerOrder> customerOrders = customerOrderRepository.findAll();
+        List<CustomerOrder> customerOrders = customerOrderRepository.findAllActive();
 
         return customerOrders.stream().map(this::toCustomerOrderDTO).toList();
     }
 
     public CustomerOrderDTO getCustomerOrderById(Long id) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(id)
+        CustomerOrder customerOrder = customerOrderRepository.findByIdActive(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         return toCustomerOrderDTO(customerOrder);
@@ -50,7 +51,7 @@ public class CustomerOrderService {
     public CustomerOrderDTO createCustomerOrder(CustomerOrderDTO customerOrderDTO) {
         CustomerOrder customerOrder = new CustomerOrder();
         // find the client if it exits
-        Client client = clientRepository.findById(customerOrderDTO.getClientId())
+        Client client = clientRepository.findByIdActive(customerOrderDTO.getClientId())
                 .orElseThrow(() -> new ClientNotFoundException(customerOrderDTO.getClientId()));
 
         System.out.println(client);
@@ -64,7 +65,7 @@ public class CustomerOrderService {
 
         // process each product in the order
         for (ProductSummaryDTO productSummaryDTO : customerOrderDTO.getOrderProducts()) {
-            Product product = productRepository.findById(productSummaryDTO.getProductId())
+            Product product = productRepository.findByIdActive(productSummaryDTO.getProductId())
                     .orElseThrow(() -> new ProductNotFoundException(productSummaryDTO.getProductId()));
 
             // check if the product has enough stock
@@ -88,7 +89,7 @@ public class CustomerOrderService {
 
         customerOrder.setOrderItems(orderProducts);
         customerOrder.setTotalPrice(totalPrice);
-
+        customerOrder.setOrderDate(LocalDateTime.now());
         customerOrderRepository.save(customerOrder);
 
         return toCustomerOrderDTO(customerOrder);
@@ -98,7 +99,7 @@ public class CustomerOrderService {
     @Transactional
     public CustomerOrderDTO updateCustomerOrder(Long id, CustomerOrderDTO customerOrderDTO) {
         // in an order, you can only modify the products you want and the amount you want
-        CustomerOrder existingOrder = customerOrderRepository.findById(id)
+        CustomerOrder existingOrder = customerOrderRepository.findByIdActive(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         existingOrder.setQuantity(customerOrderDTO.getOrderProducts()
@@ -109,7 +110,7 @@ public class CustomerOrderService {
 
         // process each product in the order
         for (ProductSummaryDTO productSummaryDTO : customerOrderDTO.getOrderProducts()) {
-            Product product = productRepository.findById(productSummaryDTO.getProductId())
+            Product product = productRepository.findByIdActive(productSummaryDTO.getProductId())
                     .orElseThrow(() -> new ProductNotFoundException(productSummaryDTO.getProductId()));
 
             // we get every orderItem in existing order
@@ -159,8 +160,8 @@ public class CustomerOrderService {
     }
 
     @Transactional
-    public CustomerOrderDTO deleteCustomerOrder(Long id) {
-        CustomerOrder order = customerOrderRepository.findById(id)
+    public CustomerOrderDTO softDeleteCustomerOrder(Long id) {
+        CustomerOrder order = customerOrderRepository.findByIdActive(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         // restore product stock
@@ -171,7 +172,8 @@ public class CustomerOrderService {
         }
         CustomerOrderDTO deletedCustomerOrder = toCustomerOrderDTO(order);
         // delete the order
-        customerOrderRepository.delete(order);
+        order.setDeletedAt(LocalDateTime.now());
+        customerOrderRepository.save(order);
 
         return deletedCustomerOrder;
     }
@@ -199,6 +201,7 @@ public class CustomerOrderService {
         customerOrderDTO.setOrderProducts(orderProductDTOs);
         customerOrderDTO.setQuantity(customerOrder.getQuantity());
         customerOrderDTO.setTotalPrice(customerOrder.getTotalPrice());
+        customerOrderDTO.setOrderDate(customerOrder.getOrderDate());
 
         return customerOrderDTO;
     }

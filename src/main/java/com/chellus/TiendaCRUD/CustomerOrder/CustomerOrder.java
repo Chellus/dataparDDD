@@ -4,6 +4,7 @@ import com.chellus.TiendaCRUD.Client.Client;
 import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -21,6 +22,9 @@ public class CustomerOrder {
 
     private double totalPrice;
     private int quantity;
+    private LocalDateTime orderDate;
+
+    private LocalDateTime deletedAt;
 
     @Override
     public String toString() {
@@ -71,5 +75,21 @@ public class CustomerOrder {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

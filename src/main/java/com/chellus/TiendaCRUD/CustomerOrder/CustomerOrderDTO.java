@@ -3,17 +3,23 @@ package com.chellus.TiendaCRUD.CustomerOrder;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CustomerOrderDTO {
     private Long id;
+
     @NotNull
     private Long clientId;
+
     @NotEmpty(message = "Order can't be empty")
     private Set<ProductSummaryDTO> orderProducts = new HashSet<>();
+
     private double totalPrice;
     private int quantity;
+
+    private LocalDateTime orderDate;
 
     public CustomerOrderDTO() {}
 
@@ -55,5 +61,13 @@ public class CustomerOrderDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 }

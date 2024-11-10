@@ -5,6 +5,7 @@ import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<ProductDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllActive();
 
         return  products.stream()
                 .map(this::toProductDTO)
@@ -24,7 +25,7 @@ public class ProductService {
     }
 
     public ProductDTO getProductById(Long id) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdActive(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         return toProductDTO(product);
@@ -44,7 +45,7 @@ public class ProductService {
     }
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdActive(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         product.setProductName(productDTO.getProductName());
@@ -58,12 +59,13 @@ public class ProductService {
         return toProductDTO(updatedProduct);
     }
 
-    public ProductDTO deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
+    public ProductDTO softDeleteProduct(Long id) {
+        Product product = productRepository.findByIdActive(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         ProductDTO deletedProduct = toProductDTO(product);
-        productRepository.delete(product);
+        product.setDeletedAt(LocalDateTime.now());
+        productRepository.save(product);
 
         return deletedProduct;
     }

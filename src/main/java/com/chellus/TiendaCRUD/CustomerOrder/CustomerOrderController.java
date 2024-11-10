@@ -48,7 +48,7 @@ public class CustomerOrderController {
     // delete existing order
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomerOrderDTO> delete(@PathVariable Long id) {
-        CustomerOrderDTO deletedOrder = customerOrderService.deleteCustomerOrder(id);
+        CustomerOrderDTO deletedOrder = customerOrderService.softDeleteCustomerOrder(id);
         return new ResponseEntity<>(deletedOrder, HttpStatus.OK);
     }
 }

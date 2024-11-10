@@ -3,6 +3,7 @@ package com.chellus.TiendaCRUD.Product;
 import com.chellus.TiendaCRUD.OrderProduct.OrderProduct;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -15,9 +16,11 @@ public class Product {
     private String productDescription;
     private double productPrice;
     private int productStock;
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "product")
     private Set<OrderProduct> orderItems;
+
 
     @Override
     public String toString() {
@@ -77,5 +80,13 @@ public class Product {
 
     public void setOrderItems(Set<OrderProduct> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

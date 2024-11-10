@@ -48,7 +48,7 @@ public class ProductController {
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long id) {
-        ProductDTO deletedProduct = productService.deleteProduct(id);
+        ProductDTO deletedProduct = productService.softDeleteProduct(id);
         return new ResponseEntity<>(deletedProduct, HttpStatus.OK);
     }
 

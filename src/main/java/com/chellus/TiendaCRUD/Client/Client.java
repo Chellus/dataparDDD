@@ -3,6 +3,7 @@ package com.chellus.TiendaCRUD.Client;
 import com.chellus.TiendaCRUD.CustomerOrder.CustomerOrder;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,8 @@ public class Client {
     private String name;
     private String address;
     private String phone;
+
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CustomerOrder> customerOrders;
@@ -59,6 +62,14 @@ public class Client {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public List<CustomerOrder> getOrders() {
